@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}游戏{% endblock %}
+
+{% block body %}
+<!-- 顶部导航栏 -->
+<nav class="navbar">
+    <div class="nav-brand">
+        <span class="nav-icon">🐍</span>
+        <span class="nav-title">SNAKE</span>
+    </div>
+    <div class="nav-links">
+        <a href="{{ url_for('game') }}" class="nav-link active" data-i18n="nav.game">游戏</a>
+        <a href="{{ url_for('dashboard') }}" class="nav-link" data-i18n="nav.dashboard">仪表盘</a>
+    </div>
+    <div class="nav-user">
+        <button class="lang-toggle lang-toggle-nav" id="langToggleBtn" onclick="I18N.toggleLang()" title="切换语言">EN</button>
+        <span class="user-name">{{ user['username'] }}</span>
+        <form action="{{ url_for('logout') }}" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-small btn-outline" data-i18n="nav.logout">退出</button>
+        </form>
+    </div>
+</nav>
+
+<!-- 游戏主区域 -->
+<main class="game-page">
+    <div class="game-layout">
+        <!-- 左侧信息面板 -->
+        <aside class="game-sidebar">
+            <div class="stat-card glass-card">
+                <div class="stat-label" data-i18n="stat.currentScore">当前分数</div>
+                <div class="stat-value neon-text" id="currentScore">0</div>
+            </div>
+            <div class="stat-card glass-card">
+                <div class="stat-label" data-i18n="stat.highestScore">最高分</div>
+                <div class="stat-value" id="highestScore">{{ stats['highest_score'] }}</div>
+            </div>
+            <div class="stat-card glass-card">
+                <div class="stat-label" data-i18n="stat.snakeLength">蛇身长度</div>
+                <div class="stat-value" id="snakeLength">3</div>
+            </div>
+            <div class="stat-card glass-card">
+                <div class="stat-label" data-i18n="stat.gameTime">游戏时长</div>
+                <div class="stat-value" id="gameTime">00:00</div>
+            </div>
+        </aside>
+
+        <!-- 中间游戏画布 -->
+        <div class="game-center">
+            <div class="canvas-wrapper glass-card">
+                <canvas id="gameCanvas" width="600" height="600"></canvas>
+                <!-- 游戏覆盖层 -->
+                <div class="game-overlay" id="gameOverlay">
+                    <div class="overlay-content">
+                        <h2 class="overlay-title" id="overlayTitle" data-i18n="overlay.ready">🐍 准备开始</h2>
+                        <p class="overlay-text" id="overlayText" data-i18n="overlay.readyText">按 空格键 或点击下方按钮开始</p>
+                        <div class="overlay-score" id="overlayScore" style="display:none;">
+                            <span class="final-score-label" data-i18n="overlay.finalScore">最终得分</span>
+                            <span class="final-score-value" id="finalScore">0</span>
+                        </div>
+                        <button class="btn btn-primary btn-glow" id="startBtn" onclick="startGame()" data-i18n="btn.start">
+                            开始游戏
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧控制面板 -->
+        <aside class="game-sidebar game-controls-sidebar">
+            <div class="controls-card glass-card">
+                <h3 class="controls-title" data-i18n="controls.title">操作说明</h3>
+                <div class="control-item">
+                    <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd>
+                    <span data-i18n="controls.arrows">方向键移动</span>
+                </div>
+                <div class="control-item">
+                    <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
+                    <span data-i18n="controls.wasd">WASD 移动</span>
+                </div>
+                <div class="control-item">
+                    <kbd>Space</kbd>
+                    <span data-i18n="controls.space">开始 / 暂停</span>
+                </div>
+            </div>
+
+            <!-- 移动端虚拟方向键 -->
+            <div class="mobile-controls" id="mobileControls">
+                <button class="dpad-btn dpad-up" ontouchstart="setDirection('up')" onclick="setDirection('up')">&#9650;</button>
+                <div class="dpad-row">
+                    <button class="dpad-btn dpad-left" ontouchstart="setDirection('left')" onclick="setDirection('left')">&#9668;</button>
+                    <button class="dpad-btn dpad-center" onclick="togglePause()">&#9208;</button>
+                    <button class="dpad-btn dpad-right" ontouchstart="setDirection('right')" onclick="setDirection('right')">&#9658;</button>
+                </div>
+                <button class="dpad-btn dpad-down" ontouchstart="setDirection('down')" onclick="setDirection('down')">&#9660;</button>
+            </div>
+
+            <!-- 排行榜预览 -->
+            <div class="leaderboard-card glass-card">
+                <h3 class="controls-title" data-i18n="leaderboard.title">🏆 排行榜</h3>
+                <div class="leaderboard-list" id="leaderboardList">
+                    <div class="loading-text" data-i18n="loading">加载中...</div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

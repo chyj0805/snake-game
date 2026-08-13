@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}登录{% endblock %}
+
+{% block body %}
+<div class="auth-page">
+    <!-- 语言切换按钮 -->
+    <button class="lang-toggle" id="langToggleBtn" onclick="I18N.toggleLang()" title="切换语言">EN</button>
+
+    <!-- 背景装饰粒子 -->
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <!-- 游戏标题 -->
+    <div class="auth-header">
+        <h1 class="game-title">
+            <span class="title-icon">🐍</span>
+            <span class="title-text" data-i18n="title.snake">SNAKE</span>
+            <span class="title-sub" data-i18n="title.sub">贪吃蛇</span>
+        </h1>
+    </div>
+
+    <!-- 登录/注册卡片 -->
+    <div class="auth-card glass-card">
+        <!-- 表单切换标签 -->
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="loginTab" onclick="switchTab('login')" data-i18n="tab.login">登录</button>
+            <button class="auth-tab" id="registerTab" onclick="switchTab('register')" data-i18n="tab.register">注册</button>
+            <div class="tab-indicator" id="tabIndicator"></div>
+        </div>
+
+        <!-- 登录表单 -->
+        <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label for="loginUsername" data-i18n="label.username">用户名</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="loginUsername" name="username"
+                           placeholder="输入用户名" data-i18n-placeholder="placeholder.username"
+                           required autocomplete="username">
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="loginPassword" data-i18n="label.password">密码</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="loginPassword" name="password"
+                           placeholder="输入密码" data-i18n-placeholder="placeholder.password"
+                           required autocomplete="current-password">
+                </div>
+            </div>
+            <div class="error-message" id="loginError"></div>
+            <button type="submit" class="btn btn-primary" id="loginBtn">
+                <span class="btn-text" data-i18n="btn.startGame">开始游戏</span>
+                <span class="btn-loading" style="display:none;">⏳</span>
+            </button>
+        </form>
+
+        <!-- 注册表单 -->
+        <form class="auth-form" id="registerForm" style="display:none;" onsubmit="handleRegister(event)">
+            <div class="input-group">
+                <label for="regUsername" data-i18n="label.username">用户名</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="regUsername" name="username"
+                           placeholder="2-20 个字符" data-i18n-placeholder="placeholder.usernameHint"
+                           required minlength="2" maxlength="20" autocomplete="username">
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="regPassword" data-i18n="label.password">密码</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="regPassword" name="password"
+                           placeholder="至少4个字符" data-i18n-placeholder="placeholder.passwordHint"
+                           required minlength="4" autocomplete="new-password">
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="regConfirmPassword" data-i18n="label.confirmPassword">确认密码</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="regConfirmPassword" name="confirm_password"
+                           placeholder="再次输入密码" data-i18n-placeholder="placeholder.confirmHint"
+                           required autocomplete="new-password">
+                </div>
+            </div>
+            <div class="error-message" id="registerError"></div>
+            <button type="submit" class="btn btn-primary" id="registerBtn">
+                <span class="btn-text" data-i18n="btn.createAccount">创建账号</span>
+                <span class="btn-loading" style="display:none;">⏳</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- 底部装饰 -->
+    <div class="auth-footer">
+        <p data-i18n="footer.controls">使用 ← → ↑ ↓ 或 WASD 操控贪吃蛇</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

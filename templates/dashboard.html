@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}仪表盘{% endblock %}
+
+{% block head %}
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block body %}
+<!-- 顶部导航栏 -->
+<nav class="navbar">
+    <div class="nav-brand">
+        <span class="nav-icon">🐍</span>
+        <span class="nav-title">SNAKE</span>
+    </div>
+    <div class="nav-links">
+        <a href="{{ url_for('game') }}" class="nav-link" data-i18n="nav.game">游戏</a>
+        <a href="{{ url_for('dashboard') }}" class="nav-link active" data-i18n="nav.dashboard">仪表盘</a>
+    </div>
+    <div class="nav-user">
+        <button class="lang-toggle lang-toggle-nav" id="langToggleBtn" onclick="I18N.toggleLang()" title="切换语言">EN</button>
+        <span class="user-name">{{ user['username'] }}</span>
+        <form action="{{ url_for('logout') }}" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-small btn-outline" data-i18n="nav.logout">退出</button>
+        </form>
+    </div>
+</nav>
+
+<!-- 仪表盘主区域 -->
+<main class="dashboard-page">
+    <div class="dashboard-header">
+        <h1 class="page-title" data-i18n="dashboard.title">📊 个人数据仪表盘</h1>
+        <p class="page-subtitle"><span data-i18n="dashboard.welcome">欢迎回来，</span><strong>{{ user['username'] }}</strong></p>
+    </div>
+
+    <!-- 统计卡片区 -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="dashboard-stat glass-card" id="statTotalGames">
+            <div class="dashboard-stat-icon">🎮</div>
+            <div class="dashboard-stat-value" id="totalGames">--</div>
+            <div class="dashboard-stat-label" data-i18n="stat.totalGames">总游戏次数</div>
+        </div>
+        <div class="dashboard-stat glass-card" id="statHighScore">
+            <div class="dashboard-stat-icon">🏆</div>
+            <div class="dashboard-stat-value" id="highScore">--</div>
+            <div class="dashboard-stat-label" data-i18n="stat.highScore">最高分</div>
+        </div>
+        <div class="dashboard-stat glass-card" id="statAvgScore">
+            <div class="dashboard-stat-icon">📈</div>
+            <div class="dashboard-stat-value" id="avgScore">--</div>
+            <div class="dashboard-stat-label" data-i18n="stat.avgScore">平均分</div>
+        </div>
+        <div class="dashboard-stat glass-card" id="statPlayTime">
+            <div class="dashboard-stat-icon">⏱️</div>
+            <div class="dashboard-stat-value" id="totalPlayTime">--</div>
+            <div class="dashboard-stat-label" data-i18n="stat.playTime">总游戏时长</div>
+        </div>
+        <div class="dashboard-stat glass-card" id="statMaxLength">
+            <div class="dashboard-stat-icon">📏</div>
+            <div class="dashboard-stat-value" id="maxLength">--</div>
+            <div class="dashboard-stat-label" data-i18n="stat.maxLength">最长蛇身</div>
+        </div>
+    </div>
+
+    <!-- 图表和历史记录区 -->
+    <div class="dashboard-grid">
+        <div class="dashboard-panel glass-card">
+            <h2 class="panel-title" data-i18n="panel.scoreTrend">📈 分数趋势</h2>
+            <div class="chart-container">
+                <canvas id="scoreTrendChart"></canvas>
+            </div>
+        </div>
+        <div class="dashboard-panel glass-card">
+            <h2 class="panel-title" data-i18n="panel.leaderboard">🏆 排行榜 Top 10</h2>
+            <div class="leaderboard-table-wrapper" id="dashboardLeaderboard">
+                <div class="loading-text" data-i18n="loading">加载中...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-panel glass-card full-width">
+        <h2 class="panel-title" data-i18n="panel.gameHistory">🕹️ 游戏历史</h2>
+        <div class="history-table-wrapper" id="gameHistoryTable">
+            <div class="loading-text" data-i18n="loading">加载中...</div>
+        </div>
+    </div>
+
+    <div class="dashboard-panel glass-card full-width">
+        <h2 class="panel-title" data-i18n="panel.loginHistory">🔐 登录记录</h2>
+        <div class="history-table-wrapper" id="loginHistoryTable">
+            <div class="loading-text" data-i18n="loading">加载中...</div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
